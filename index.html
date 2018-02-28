@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="shortcut icon" type="image/png" href="favicon.png"/>
+<style>
+body {font-family: Arial, Helvetica, sans-serif;}
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 80%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+
+/* Add Animation */
+@-webkit-keyframes animatetop {
+    from {top:-300px; opacity:0} 
+    to {top:0; opacity:1}
+}
+
+@keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+}
+
+/* The Close Button */
+.close {
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-header {
+    padding: 2px 16px;
+    background-color: #5cb85c;
+    color: white;
+}
+
+.modal-body {padding: 2px 16px;}
+
+.modal-footer {
+    padding: 2px 16px;
+    background-color: #5cb85c;
+    color: white;
+}
+</style>
+</head>
+<body>
+<!-- 
+	<table id="tblMain" style="width:100%; margin:1em auto">	
+-->
+<table id="tblHeading" style="width:100%; margin:1em auto" border="0">	
+	<tr>
+		<td><img src="eclc00 128x128.png" height="72px" width="72px"></td>
+		<td><h2>Electric Current Load Calculation</h2></td>
+	</tr>
+</table>
+<br>
+
+<table id="tblLoads"  style="width:100%; margin:1em auto" border="0">	
+	<tr>
+		<td width="75%" align="right">SERVICE VOLTAGE: &nbsp;&nbsp;&nbsp;</td>
+		<td width="25%">			
+			<select id="serviceVoltage" style="width:100%; text-align-last:center;" >
+				<option value="230">230V</option>
+				<option value="110">110V</option>
+			</select>	
+		</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td width="75%">General Ligthning and Convenience Receptacle Load</td>
+		<td width="25%">&nbsp;</td>
+	</tr>
+	
+	<tr>
+		<td width="75%" align="right">Total Floor Area (m<sup>2</sup>): &nbsp;&nbsp;&nbsp;</td>
+		<td width="25%"><input type="text" id="floorArea" style="width:100%;text-align:center;" value="0"></td>
+	</tr>
+	
+	<tr>
+		<td width="75%">Small Appliance Load</td>
+		<td width="25%">&nbsp;</td>
+	</tr>
+	
+	<tr>
+		<td width="75%" align="right">Number of SAL Branch Circuit: &nbsp;&nbsp;&nbsp;</td>
+		<td width="25%">			
+			<select id="SAL" style="width:100%; text-align-last:center;" >
+				<option value="1">1</option>
+				<option selected value="2">2</option>
+			</select>	
+		</td>
+	</tr>
+	
+	<tr>
+		<td width="75%">Laundry Load</td>
+		<td width="25%">&nbsp;</td>
+	</tr>
+	
+	<tr>
+		<td width="75%" align="right">Number of LL Branch Circuit: &nbsp;&nbsp;&nbsp;</td>
+		<td width="25%">			
+			<select id="laundry" style="width:100%; text-align-last:center;" >
+				<option selected value="1">1</option>
+				<option value="2">2</option>
+			</select>	
+		</td>
+	</tr>
+	
+	<tr>
+		<td width="75%">Bathroom Load</td>
+		<td width="25%">&nbsp;</td>
+	</tr>
+	
+	<tr>
+		<td width="75%" align="right">Number of BL Branch Circuit: &nbsp;&nbsp;&nbsp;</td>
+		<td width="25%">			
+			<select id="bathroom" style="width:100%; text-align-last:center;" >
+				<option selected value="1">1</option>
+				<option value="2">2</option>
+			</select>	
+		</td>
+	</tr>
+	
+	
+</table>
+
+<table id="tblAppliances"  style="width:100%; margin:1em auto" border="0">	
+	<tr>
+		<td colspan=5>&nbsp; </td>		
+	</tr>
+	<tr>
+		<td colspan=5>FASTENED APPLIANCES: </td>		
+	</tr>	
+	<tr>
+		<td width="5%">&nbsp;</td>
+		<td width="25%">&nbsp;</td>
+		<td width="25%" align="center">QTY</td>
+		<td width="20%" align="center">VA</td>
+		<td width="20%" align="center">Neutral</td>
+	</tr>
+	<tr>
+		<td width="5%">&nbsp;</td>
+		<td width="25%"><input type="text" id="garbageDisposer" style="width:100%;text-align:right;" value="Garbage Disposer:   " disabled></td>
+		<td width="25%"><input type="text" id="garbageDisposerQty" style="width:100%;text-align:center;" value="0"></td>
+		<td width="20%"><input type="text" id="garbageDisposerVA" style="width:100%;text-align:center;" value="0"></td>
+		<td width="20%" align="center"><input type="checkbox" id="garbageDisposerNeutral" value="1"></td>
+	</tr>
+	
+	<tr>
+		<td width="5%">&nbsp;</td>
+		<td width="25%"><input type="text" id="waterHeater" style="width:100%;text-align:right;" value="Water Heater:   " disabled></td>
+		<td width="25%"><input type="text" id="waterHeaterQty" style="width:100%;text-align:center;" value="0"></td>
+		<td width="20%"><input type="text" id="waterHeaterVA" style="width:100%;text-align:center;" value="0"></td>
+		<td width="20%" align="center"><input type="checkbox" id="waterHeaterNeutral" value="1"></td>
+	</tr>
+	
+	<tr>
+		<td width="5%">&nbsp;</td>
+		<td width="25%"><input type="text" id="dishWasher" style="width:100%;text-align:right;" value="Dish Washer:   " disabled></td>
+		<td width="25%"><input type="text" id="dishWasherQty" style="width:100%;text-align:center;" value="0"></td>
+		<td width="20%"><input type="text" id="dishWasherVA" style="width:100%;text-align:center;" value="0"></td>
+		<td width="20%" align="center"><input type="checkbox" id="dishWasherNeutral" value="1"></td>
+	</tr>
+	
+	<tr>
+		<td colspan=5>&nbsp; </td>		
+	</tr>
+	
+	<tr>
+		<td colspan=5>COOKING APPLIANCES: </td>		
+	</tr>	
+	<tr>
+		<td width="5%">&nbsp;</td>
+		<td width="25%">&nbsp;</td>
+		<td width="25%" align="center">QTY</td>
+		<td width="20%" align="center">VA</td>
+		<td width="20%" align="center">Neutral</td>
+	</tr>
+		
+	<tr>
+		<td width="5%">&nbsp;</td>
+		<td width="25%"><input type="text" id="electricRange" style="width:100%;text-align:right;" value="Electric Range:   " disabled></td>
+		<td width="25%"><input type="text" id="electricRangeQty" style="width:100%;text-align:center;" value="0"></td>
+		<td width="20%"><input type="text" id="electricRangeVA" style="width:100%;text-align:center;" value="0"></td>
+		<td width="20%" align="center"><input type="checkbox" id="electricRangeNeutral" value="1"></td>
+	</tr>
+	
+	<tr>
+		<td width="5%">&nbsp;</td>
+		<td width="25%"><input type="text" id="cookTop" style="width:100%;text-align:right;" value="Cook Top:   " disabled></td>
+		<td width="25%"><input type="text" id="cookTopQty" style="width:100%;text-align:center;" value="0"></td>
+		<td width="20%"><input type="text" id="cookTopVA" style="width:100%;text-align:center;" value="0"></td>
+		<td width="20%" align="center"><input type="checkbox" id="cookTopNeutral" value="1"></td>
+	</tr>
+	
+	<tr>
+		<td width="5%">&nbsp;</td>
+		<td width="25%"><input type="text" id="wallMountedOven" style="width:100%;text-align:right;" value="Wall Mounted Oven:   " disabled></td>
+		<td width="25%"><input type="text" id="wallMountedOvenQty" style="width:100%;text-align:center;" value="0"></td>
+		<td width="20%"><input type="text" id="wallMountedOvenVA" style="width:100%;text-align:center;" value="0"></td>
+		<td width="20%" align="center"><input type="checkbox" id="wallMountedOvenNeutral" value="1"></td>
+	</tr>
+	
+	<tr>
+		<td colspan=5>&nbsp; </td>		
+	</tr>
+	
+	<tr>
+		<td colspan=5>CLOTHES DRYER: </td>		
+	</tr>	
+	<tr>
+		<td width="5%">&nbsp;</td>
+		<td width="25%">&nbsp;</td>
+		<td width="25%" align="center">QTY</td>
+		<td width="20%" align="center">VA</td>
+		<td width="20%" align="center">Neutral</td>
+	</tr>
+		
+	<tr>
+		<td width="5%">&nbsp;</td>
+		<td width="25%"><input type="text" id="clothesDryer1" style="width:100%;text-align:right;" value="Clothes Dryer 1:   " disabled></td>
+		<td width="25%"><input type="text" id="clothesDryer1Qty" style="width:100%;text-align:center;" value="0"></td>
+		<td width="20%"><input type="text" id="clothesDryer1VA" style="width:100%;text-align:center;" value="0"></td>
+		<td width="20%" align="center"><input type="checkbox" id="clothesDryer1Neutral" value="1"></td>
+	</tr>
+	
+	<tr>
+		<td width="5%">&nbsp;</td>
+		<td width="25%"><input type="text" id="clothesDryer2" style="width:100%;text-align:right;" value="Clothes Dryer 2:   " disabled></td>
+		<td width="25%"><input type="text" id="clothesDryer2Qty" style="width:100%;text-align:center;" value="0"></td>
+		<td width="20%"><input type="text" id="clothesDryer2VA" style="width:100%;text-align:center;" value="0"></td>
+		<td width="20%" align="center"><input type="checkbox" id="clothesDryer2Neutral" value="1"></td>
+	</tr>
+	
+	<tr>
+		<td colspan=5>&nbsp; </td>		
+	</tr>
+	
+	<tr>
+		<td colspan=5>HEATING LOAD OR AIR CONDITIONING LOAD: </td>		
+	</tr>	
+	<tr>
+		<td width="5%">&nbsp;</td>
+		<td width="25%">&nbsp;</td>
+		<td width="25%" align="center">QTY</td>
+		<td width="20%" align="center">VA</td>
+		<td width="20%" align="center">Neutral</td>
+	</tr>
+		
+	<tr>
+		<td width="5%">&nbsp;</td>
+		<td width="25%" align="center">
+			<input type="radio" id="heater" value="heater"> Heater &nbsp;&nbsp;&nbsp;&nbsp;
+			<input type="radio" id="acu" value="acu" checked> ACU
+		</td>
+		<td width="25%"><input type="text" id="clothesDryer1Qty" style="width:100%;text-align:center;" value="0"></td>
+		<td width="20%"><input type="text" id="clothesDryer1VA" style="width:100%;text-align:center;" value="0"></td>
+		<td width="20%" align="center"><input type="checkbox" id="clothesDryer1Neutral" value="1"></td>
+	</tr>
+	
+	<tr>
+		<td colspan=5>&nbsp; </td>		
+	</tr>
+	
+	<tr>
+		<td colspan=5>MOTOR LOAD: </td>		
+	</tr>	
+	<tr>
+		<td width="5%">&nbsp;</td>
+		<td width="25%">&nbsp;</td>
+		<td width="25%" align="center">QTY</td>
+		<td width="20%" align="center">VA</td>
+		<td width="20%" align="center">Neutral</td>
+	</tr>
+	
+	<tr>
+		<td width="5%">&nbsp;</td>
+		<td width="25%"><input type="text" id="waterPump" style="width:100%;text-align:right;" value="Water Pump:   " disabled></td>
+		<td width="25%"><input type="text" id="waterPumpQty" style="width:100%;text-align:center;" value="0"></td>
+		<td width="20%"><input type="text" id="waterPumpVA" style="width:100%;text-align:center;" value="0"></td>
+		<td width="20%" align="center"><input type="checkbox" id="waterPumpNeutral" value="1"></td>
+	</tr>
+	
+	
+</table>
+
+
+
+
+<!-- Trigger/Open The Modal -->
+<p align="center">
+<button id="myBtn"><b>CALCULATE LOAD</b></button>
+</p>
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="close">&times;</span>
+      <h2><img src="eclc00 128x128.png" height="48px" width="48px">Load Calculation Results</h2>
+    </div>
+    <div class="modal-body">
+      <p>Phase Load   =        VA</p>
+      <p>Neutral Load =        VA</p> 	
+	  <hr>
+	  <input type="radio" id="copper" value="copper" checked> Copper &nbsp;&nbsp;&nbsp;&nbsp;
+			<input type="radio" id="aluminum" value="aluminum" > Aluminum
+	  <p>Size of Service Entrace Conductor</p>
+	  <p>**</p>
+	  <p>&nbsp;</p>
+      <p>Size of Main Current Protective Device</p>
+	  <p>**</p>
+    </div>
+    <div class="modal-footer">
+      Note:<br>&nbsp;&nbsp;&nbsp;&nbsp;Ground is Copper<br>
+	  <br><i>Coleen, results will be computed once formula are explained.</i><br>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Get the modal
+var modal = document.getElementById('myModal');
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal 
+btn.onclick = function() {
+    modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+    modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+</script>
+
+</body>
+</html>
