@@ -17,6 +17,6 @@
       Sir Richard O. Marzan
   </author>
   
-  <icon="eclc00 64x64.png" />
+  <icon src="eclc00 64x64.png" />
 
 </widget>
