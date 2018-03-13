@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="shortcut icon" type="image/png" href="favicon.png"/>
+<style>
+body {font-family: Arial, Helvetica, sans-serif;}
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 80%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+
+/* Add Animation */
+@-webkit-keyframes animatetop {
+    from {top:-300px; opacity:0} 
+    to {top:0; opacity:1}
+}
+
+@keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+}
+
+/* The Close Button */
+.close {
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-header {
+    padding: 2px 16px;
+    background-color: #5cb85c;
+    color: white;
+}
+
+.modal-body {padding: 2px 16px;}
+
+.modal-footer {
+    padding: 2px 16px;
+    background-color: #5cb85c;
+    color: white;
+}
+
+/*buttons */
+.buttonAdd {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    border-radius: 8px;
+    color: white;
+    padding: 6px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.buttonDelete {
+    background-color: #f44336; /* Red*/
+    border: none;
+    border-radius: 8px;
+    color: white;
+    padding: 6px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    cursor: pointer;
+}
+	
+.buttonDisabled {
+	opacity: 0.6;
+    cursor: not-allowed;
+}
+</style>
+
+<script>
+/* GLOBAL VARS */
+
+/*Row Counters*/
+var rowsFA=1;
+var rowsCA=1;
+var rowsCD=1;
+var rowsHL=1;
+var rowsML=1;
+</script>
+
+</head>
+
+<body onload="myOnLoadFunction()">
+<!-- 
+	<table id="tblMain" style="width:100%; margin:1em auto">	
+-->
+
+<table id="tblHeading" style="width:100%; margin:1em auto" border="0">	
+	<tr>
+		<td><img src="eclc00 128x128.png" height="72px" width="72px"></td>
+		<td><h2>Residential Electrical Service Calculator</h2></td>
+	</tr>
+</table>
+<br>
+
+<table id="tblLoads"  style="width:100%; margin:1em auto" border="0">	
+	<tr>
+		<td width="75%" align="right">SERVICE VOLTAGE: &nbsp;&nbsp;&nbsp;</td>
+		<td width="25%">			
+			<select id="serviceVoltage" style="width:100%; text-align-last:center;" >
+				<option value="230" selected>230V</option>
+				<option value="208">208V</option>
+				<option value="200">200V</option>
+				<option value="115">115V</option>
+			</select>	
+		</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td width="75%">General Ligthning and Convenience Receptacle Load</td>
+		<td width="25%">&nbsp;</td>
+	</tr>
+	
+	<tr>
+		<td width="75%" align="right">Total Floor Area (m<sup>2</sup>): &nbsp;&nbsp;&nbsp;</td>
+		<td width="25%"><input type="text" id="floorArea" style="width:100%;text-align:center;" value="0"></td>
+	</tr>
+	
+	<tr>
+		<td width="75%">Small Appliance Load</td>
+		<td width="25%">&nbsp;</td>
+	</tr>
+	
+	<tr>
+		<td width="75%" align="right">Number of Branch Circuit: &nbsp;&nbsp;&nbsp;</td>
+		<td width="25%">			
+			<select id="SAL" style="width:100%; text-align-last:center;" >
+				<option value="1">1</option>
+				<option selected value="2">2</option>
+			</select>	
+		</td>
+	</tr>
+	
+	<tr>
+		<td width="75%">Laundry Load</td>
+		<td width="25%">&nbsp;</td>
+	</tr>
+	
+	<tr>
+		<td width="75%" align="right">Number of Branch Circuit: &nbsp;&nbsp;&nbsp;</td>
+		<td width="25%">			
+			<select id="laundry" style="width:100%; text-align-last:center;" >
+				<option selected value="1">1</option>
+				<option value="2">2</option>
+			</select>	
+		</td>
+	</tr>
+	
+	<tr>
+		<td width="75%">Bathroom Load</td>
+		<td width="25%">&nbsp;</td>
+	</tr>
+	
+	<tr>
+		<td width="75%" align="right">Number of Branch Circuit: &nbsp;&nbsp;&nbsp;</td>
+		<td width="25%">			
+			<select id="bathroom" style="width:100%; text-align-last:center;" >
+				<option selected value="1">1</option>
+				<option value="2">2</option>
+			</select>	
+		</td>
+	</tr>
+	
+	
+</table>
+
+<table id="tblFA" name="tblFA" style="width:100%; margin:1em auto" border="0">	
+	<tr id="rowFA00">
+		<td colspan=5>&nbsp; </td>		
+	</tr>
+	<tr id="rowFA01">
+		<td colspan=5>FASTENED APPLIANCES: </td>		
+	</tr>	
+	<tr id="rowFA02">
+		<td width="5%">&nbsp;</td>
+		<td width="45%">&nbsp;</td>
+		<td width="25%" align="center">QTY</td>
+		<td width="20%" align="center">VA</td>
+		<td width="5%">&nbsp;<button class="buttonAdd" id="btnAddFA" onclick="addFA()">+</button></td>		
+	</tr>
+	<tr id="rowFA1">
+		<td width="5%">&nbsp;</td>
+		<td width="45%">
+			<select id="cboFA1" onchange="cboFAChanged(1)" style="width:100%; text-align-last:right;" ></select>
+		</td>
+		<td width="25%"><input type="text" id="FAQty1" style="width:100%;text-align:center;" value="0"></td>
+		<td width="20%"><select id="cboFAVA1" style="width:100%; text-align-last:center;" ><option selected value="0">0</option></select></td>		
+		<td width="5%">&nbsp;<button class="buttonDelete buttonDisabled" id="btnDeleteFA1" disabled>-</button></td>
+	</tr>		
+</table>
+
+<table id="tblCA"  style="width:100%; margin:1em auto" border="0">
+	<tr id="rowCA00">
+		<td colspan=5>&nbsp; </td>		
+	</tr>
+	<tr id="rowCA01">
+		<td colspan=5>COOKING APPLIANCES: </td>		
+	</tr>	
+	<tr id="rowCA02">
+		<td width="5%">&nbsp;</td>
+		<td width="45%">&nbsp;</td>
+		<td width="25%" align="center">QTY</td>
+		<td width="20%" align="center">VA</td>
+		<td width="5%">&nbsp;<button class="buttonAdd" id="btnAddCA" onclick="addCA()">+</button></td>		
+	</tr>
+	<tr id="rowCA1">
+		<td width="5%">&nbsp;</td>
+		<td width="45%">
+			<select id="cboCA1" onchange="cboCAChanged(1)" style="width:100%; text-align-last:right;" ></select>
+		</td>
+		<td width="25%"><input type="text" id="CAQty1" style="width:100%;text-align:center;" value="0"></td>
+		<td width="20%"><select id="cboCAVA1" style="width:100%; text-align-last:center;" ><option selected value="0">0</option></select></td>		
+		<td width="5%">&nbsp;<button class="buttonDelete buttonDisabled" id="btnDeleteCA1" disabled>-</button></td>
+	</tr>
+</table>
+
+<table id="tblCD"  style="width:100%; margin:1em auto" border="0">
+	<tr id="rowCD00">
+		<td colspan=5>&nbsp; </td>		
+	</tr>
+	<tr id="rowCD01">
+		<td colspan=5>CLOTHES DRYER: </td>		
+	</tr>	
+	<tr id="rowCD02">
+		<td width="5%">&nbsp;</td>
+		<td width="45%">&nbsp;</td>
+		<td width="25%" align="center">QTY</td>
+		<td width="20%" align="center">VA</td>
+		<td width="5%">&nbsp;<button class="buttonAdd" id="btnAddCD" onclick="addCD()">+</button></td>		
+	</tr>
+	<tr id="rowCD1">
+		<td width="5%">&nbsp;</td>	        
+        <td width="45%"><input type="text" id="CD1" style="width:100%;text-align:center;" value="Clothes Dryer 1"></td>		
+       	<td width="25%"><input type="text" id="CDQty1" style="width:100%;text-align:center;" value="0"></td>
+       	<td width="20%"><select id="cboCDVA1" style="width:100%; text-align-last:center;" ><option selected value="0">0</option></select></td>
+       	<td width="5%">&nbsp;<button class="buttonDelete buttonDisabled" id="btnDeleteCD1" disabled>-</button></td>
+	</tr>
+</table>
+
+<table id="tblHL"  style="width:100%; margin:1em auto" border="0">	
+	<tr id="rowHL00">
+		<td colspan=5>&nbsp; </td>		
+	</tr>
+	<tr id="rowHL01">
+		<td colspan=5>HEATING LOAD OR AIR CONDITIONING LOAD: </td>		
+	</tr>	
+	<tr id="rowHL02">
+		<td width="5%">&nbsp;</td>
+		<td width="45%">&nbsp;</td>
+		<td width="25%" align="center">QTY</td>
+		<td width="20%" align="center">VA</td>
+		<td width="5%">&nbsp;<button class="buttonAdd" id="btnAddHL" onclick="addHL()">+</button></td>		
+	</tr>				
+	<tr id="rowHL1">
+		<td width="5%">&nbsp;</td>
+		<td width="45%" align="center"><div name="selectHLrating1" id="selectHLrating1"><input type="radio" id="heater1" name="selectHLrating1" value="heater"> Heater &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" id="acu1" name="selectHLrating1" value="acu" checked> ACU</div></td>
+		<td width="25%"><input type="text" id="HLQty1" style="width:100%;text-align:center;" value="0"></td>
+		<td width="20%"><select id="cboHLVA1" style="width:100%; text-align-last:center;" ><option selected value="0">0</option></select></td>
+		<td width="5%">&nbsp;<button class="buttonDelete buttonDisabled" id="btnDeleteHL1" disabled>-</button></td>		
+	</tr>
+</table>
+
+<table id="tblML"  style="width:100%; margin:1em auto" border="0">	
+	<tr id="rowML00">
+		<td colspan=7>&nbsp; </td>		
+	</tr>
+	<tr id="rowML01">
+		<td colspan=7>MOTOR LOAD: </td>		
+	</tr>	
+	<tr id="rowML02">
+		<td width="5%">&nbsp;</td>
+		<td width="20%">&nbsp;</td>
+		<td width="15%">&nbsp;</td>
+		<td width="10%">&nbsp;</td>
+		<td width="25%" align="center">QTY</td>
+		<td width="20%" align="center">VA</td>
+		<td width="5%">&nbsp;<button class="buttonAdd" id="btnAddML" onclick="addML()">+</button></td>		
+	</tr>	
+	<tr>
+		<td width="5%">&nbsp;</td>
+		<td width="20%"><select id="cboML1" onchange="cboMLChanged(1)" style="width:100%; text-align-last:right;" ></select></td>
+		<td width="15%" align="center"><div name="selectMLrating1" id="selectMLrating1"><input type="radio" id="VA1" name="selectMLrating1" onclick = "MLratingTypeChanged(this)" value="VA" checked> VA &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" id="HP1" name="selectMLrating1" onclick = "MLratingTypeChanged(this)" value="HP"> HP </div></td>
+		<td width="10%" align="center"><select id="cboHP1" onchange="cboHPChanged(1)" style="width:100%; text-align-last:right;" disabled></select></td>
+		<td width="25%"><input type="text" id="MLQty1" style="width:100%;text-align:center;" value="0"></td>
+		<td width="20%"><select id="cboMLVA1" style="width:100%; text-align-last:center;" ><option selected value="0">0</option></select></td>	
+		<td width="5%">&nbsp;<button class="buttonDelete buttonDisabled" id="btnDeleteML1" disabled>-</button></td>	
+	</tr>	
+</table>
+
+
+
+
+<!-- Trigger/Open The Modal -->
+<p align="center">
+<button id="myBtn"><b>CALCULATE LOAD</b></button>
+</p>
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="close">&times;</span>
+      <h2><img src="eclc00 128x128.png" height="48px" width="48px">Load Calculation Results</h2>
+    </div>
+    <div class="modal-body">
+      <p>Phase Load   =        VA</p>
+      <p>Neutral Load =        VA</p> 	
+	  <hr>
+	  <input type="radio" id="copper" value="copper" checked> Copper &nbsp;&nbsp;&nbsp;&nbsp;
+			<input type="radio" id="aluminum" value="aluminum" > Aluminum
+	  <p>Size of Service Entrace Conductor</p>
+	  <p>**</p>
+	  <p>&nbsp;</p>
+      <p>Size of Main Current Protective Device</p>
+	  <p>**</p>
+    </div>
+    <div class="modal-footer">
+      Note:<br>&nbsp;&nbsp;&nbsp;&nbsp;Ground is Copper<br>
+	  <br><i>Coleen, results will be computed once formula are explained.</i><br>
+    </div>
+  </div>
+
+</div>
+
+<script type="text/javascript">
+	
+	//---------------------------------------------------------------
+	/*Arrays*/
+	//VA Ratings
+	var arrVARating230V = [0, 2.2, 2.9, 3.6, 4.9, 6.9, 8, 10, 12, 17, 28, 40, 50];
+	var arrVARating208V = [0, 2.4, 3.2, 4, 5.4, 7.6, 8.8, 11, 13.2, 18.7, 30.8, 44, 55];
+	var arrVARating200V = [0, 2.5, 3.3, 4.1, 5.6, 7.9, 9.2, 11.5, 13.8, 19.6, 32.2, 46, 57.5];
+	var arrVARating115V = [0, 4.4, 5.8, 7.2, 9.8, 13.8, 16, 20, 24, 34, 56, 80, 100];
+	var arrHPRatingText = ["0", "1/6", "1/4", "1/3", "1/2", "3/4", "1", "1 1/2", "2", "3", "5", "7 1/2", "10"]
+	var arrHPRating = [0, 0.166666666666667, 0.25, 0.333333333333333, 0.5, 0.75, 1, 1.5, 2, 3, 5, 7.5, 10]
+	
+	//---------------------------------------------------------------
+	//Appliance Types
+	var arrFAtypes = ["Garbage Disposer", "Water Heater", "Dishwasher"];
+	var arrCAtypes = ["Electric Range", "Cook Top", "Wall-Mounted Oven"];
+	var arrMLtypes = ["Water Pump", "Washing Machine"];
+	
+	//---------------------------------------------------------------
+	//Get the modal
+	var modal = document.getElementById('myModal');
+	
+	// Get the button that opens the modal
+	var btn = document.getElementById("myBtn");
+	
+	// Get the <span> element that closes the modal
+	var span = document.getElementsByClassName("close")[0];
+	
+	// When the user clicks the button, open the modal 
+	btn.onclick = function() {
+	    modal.style.display = "block";
+	}
+	
+	// When the user clicks on <span> (x), close the modal
+	span.onclick = function() {
+	    modal.style.display = "none";
+	}
+	
+	// When the user clicks anywhere outside of the modal, close it
+	window.onclick = function(event) {
+	    if (event.target == modal) {
+	        modal.style.display = "none";
+	    }
+	}
+	
+	
+	
+	//---------------------------------------------------------------
+	//gen-purpose functions
+	
+	function myOnLoadFunction() {
+		//POPULATE COMBOBOXES (first rows)		
+		populateFAcbo("cboFA1");
+		populateCAcbo("cboCA1");
+		populateMLcbo("cboML1");
+		populateHPcbo("cboHP1");
+		
+    	//POPULATE VAs
+    	setVARating("cboFAVA1");
+    	setVARating("cboCAVA1");
+    	setVARating("cboCDVA1");
+    	setVARating("cboHLVA1");
+    	setMLVARating("cboMLVA1", "VA");
+	}
+	
+	function setVARating(cboName) {
+		var volt = document.getElementById("serviceVoltage").value;
+		var arr=[];
+		if (volt==230) {
+			arr=arrVARating230V;			
+		}
+		else if(volt==208){
+			arr=arrVARating208V;
+		}
+		else if(volt==200) {
+			arr=arrVARating200V;
+		}
+		else {
+			//volt=115
+			arr=arrVARating115V;
+		}
+			
+		var cbo = document.getElementById(cboName); 
+		cbo.innerHTML="";
+		for(var i = 0; i < arr.length; i++) {
+    	    var opt = arr[i];
+    	    var el = document.createElement("option");
+    	    el.textContent = opt;
+    	    el.value = opt;
+    	    cbo.appendChild(el);
+    	}
+	}
+	
+	
+	
+	
+	//---------------------------------------------------------------
+	//FA functions
+	
+	function populateFAcbo(cboName){
+		var cbo = document.getElementById(cboName); 
+		var el = document.createElement("option");
+	    el.textContent = "SELECT Fastened Appliance";
+	    el.value = "";
+	    el.selected=true;
+	    el.disabled=true;
+	    cbo.appendChild(el);
+
+    	for(var i = 0; i < arrFAtypes.length; i++) {
+    	    var opt = arrFAtypes[i];
+    	    el = document.createElement("option");
+    	    el.textContent = opt;
+    	    el.value = opt;
+    	    cbo.appendChild(el);
+    	}
+    	
+	}
+	
+	function cboFAChanged(index) {
+		setVARating("cboFAVA" + index)
+	}
+	
+	function addFA() {		
+        var cols = "";        
+        rowsFA = rowsFA+1;
+        //alert(rowsFA);
+        cols += '<tr id="rowFA' + rowsFA + '">';
+        cols += '<td width="5%">&nbsp;</td>';	        
+        cols += '<td width="45%"><select id="cboFA' + rowsFA + '" onchange="cboFAChanged(' + rowsFA + ')" style="width:100%; text-align-last:right;" ></select></td>';		
+       	cols += '<td width="25%"><input type="text" id="FAQty' + rowsFA + '" style="width:100%;text-align:center;" value="0"></td>';
+       	cols += '<td width="20%"><select id="cboFAVA' + rowsFA + '" style="width:100%; text-align-last:center;" ><option selected value="0">0</option></select></td>';
+       	cols += '<td width="5%">&nbsp;<button class="buttonDelete" id="' + rowsFA + '" onclick="deleteFA(this)">-</button></td>';
+       	cols += '</tr>';       	
+       	var tr=document.getElementById("tblFA").insertRow(-1).innerHTML = cols;
+       	populateFAcbo("cboFA"+rowsFA);       	    	
+	}
+	
+	function deleteFA(obj){		
+		var index = obj.closest("tr").rowIndex;
+		document.getElementById("tblFA").deleteRow(index);    	   
+	}
+	
+	
+	//---------------------------------------------------------------
+	//CA functions
+	
+	function populateCAcbo(cboName){
+		var cbo = document.getElementById(cboName); 
+		var el = document.createElement("option");
+	    el.textContent = "SELECT Cooking Appliance";
+	    el.value = "";
+	    el.selected=true;
+	    el.disabled=true;
+	    cbo.appendChild(el);
+
+    	for(var i = 0; i < arrCAtypes.length; i++) {
+    	    var opt = arrCAtypes[i];
+    	    el = document.createElement("option");
+    	    el.textContent = opt;
+    	    el.value = opt;
+    	    cbo.appendChild(el);
+    	}
+    	
+	}
+	
+	function cboCAChanged(index) {
+		setVARating("cboCAVA" + index)
+	}
+	
+	function addCA() {		
+        var cols = "";        
+        rowsCA = rowsCA+1;        
+        cols += '<tr id="rowCA' + rowsCA + '">';
+        cols += '<td width="5%">&nbsp;</td>';	        
+        cols += '<td width="45%"><select id="cboCA' + rowsCA + '" onchange="cboCAChanged(' + rowsCA + ')" style="width:100%; text-align-last:right;" ></select></td>';		
+       	cols += '<td width="25%"><input type="text" id="CAQty' + rowsCA + '" style="width:100%;text-align:center;" value="0"></td>';
+       	cols += '<td width="20%"><select id="cboCAVA' + rowsCA + '" style="width:100%; text-align-last:center;" ><option selected value="0">0</option></select></td>';
+       	cols += '<td width="5%">&nbsp;<button class="buttonDelete" id="' + rowsCA + '" onclick="deleteCA(this)">-</button></td>';
+       	cols += '</tr>';       	
+       	var tr=document.getElementById("tblCA").insertRow(-1).innerHTML = cols;
+       	populateCAcbo("cboCA"+rowsCA);       	    	
+	}
+	
+	function deleteCA(obj){		
+		var index = obj.closest("tr").rowIndex;
+		document.getElementById("tblCA").deleteRow(index);    	   
+	}
+	
+	
+	//---------------------------------------------------------------
+	//CD functions
+	
+	function addCD() {		
+        var cols = "";        
+        rowsCD = rowsCD+1;        
+        cols += '<tr id="rowCD' + rowsCD + '">';
+        cols += '<td width="5%">&nbsp;</td>';	        
+        cols += '<td width="45%"><input type="text" id="CD' + rowsCD + '" style="width:100%;text-align:center;" value="Clothes Dryer ' + rowsCD + '"></td>';		
+       	cols += '<td width="25%"><input type="text" id="CDQty' + rowsCD + '" style="width:100%;text-align:center;" value="0"></td>';
+       	cols += '<td width="20%"><select id="cboCDVA' + rowsCD + '" style="width:100%; text-align-last:center;" ><option selected value="0">0</option></select></td>';
+       	cols += '<td width="5%">&nbsp;<button class="buttonDelete" id="btnDeleteCD' + rowsCD + '" onclick="deleteCD(this)">-</button></td>';
+       	cols += '</tr>';       	
+       	var tr=document.getElementById("tblCD").insertRow(-1).innerHTML = cols;   
+       	setVARating("cboCDVA" + rowsCD)
+	}
+	
+	function deleteCD(obj){		
+		var index = obj.closest("tr").rowIndex;
+		document.getElementById("tblCD").deleteRow(index);    	   
+	}
+	
+	
+	//---------------------------------------------------------------
+	//HL functions
+	
+	function addHL() {		
+        var cols = "";        
+        rowsHL = rowsHL+1;        
+        cols += '<tr id="rowHL' + rowsHL + '">';
+        cols += '<td width="5%">&nbsp;</td>';	        
+        cols += '<td width="45%" align="center"><div name="selectHLrating' + rowsHL + '" id="selectHLrating' + rowsHL + '"><input type="radio" id="heater' + rowsHL + '" name="selectHLrating' + rowsHL + '" value="heater"> Heater &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" id="acu' + rowsHL + '" name="selectHLrating' + rowsHL + '" value="acu" checked> ACU</div></td>';		
+       	cols += '<td width="25%"><input type="text" id="HLQty' + rowsHL + '" style="width:100%;text-align:center;" value="0"></td>';
+       	cols += '<td width="20%"><select id="cboHLVA' + rowsHL + '" style="width:100%; text-align-last:center;" ><option selected value="0">0</option></select></td>';
+       	cols += '<td width="5%">&nbsp;<button class="buttonDelete" id="btnDeleteHL' + rowsHL + '" onclick="deleteHL(this)">-</button></td>';
+       	cols += '</tr>';       	
+       	var tr=document.getElementById("tblHL").insertRow(-1).innerHTML = cols;   
+       	setVARating("cboHLVA" + rowsHL)
+	}
+	
+	function deleteHL(obj){		
+		var index = obj.closest("tr").rowIndex;
+		document.getElementById("tblHL").deleteRow(index);    	   
+	}
+	
+	
+	//---------------------------------------------------------------
+	//ML functions
+	
+	function populateMLcbo(cboName){
+		var cbo = document.getElementById(cboName); 
+		var el = document.createElement("option");
+	    el.textContent = "SELECT Motor Appliance";
+	    el.value = "";
+	    el.selected=true;
+	    el.disabled=true;
+	    cbo.appendChild(el);
+
+    	for(var i = 0; i < arrMLtypes.length; i++) {
+    	    var opt = arrMLtypes[i];
+    	    el = document.createElement("option");
+    	    el.textContent = opt;
+    	    el.value = opt;
+    	    cbo.appendChild(el);
+    	}
+    	
+	}
+	
+	function populateHPcbo(cboName){
+		var cbo = document.getElementById(cboName); 
+		cbo.innerHTML="";
+		var el = document.createElement("option");
+	    el.textContent = "SELECT Horsepower";
+	    el.value = "";
+	    el.selected=true;
+	    el.disabled=true;
+	    cbo.appendChild(el);
+
+    	for(var i = 0; i < arrHPRating.length; i++) {
+    	    var opt = arrHPRatingText[i];
+    	    el = document.createElement("option");
+    	    el.textContent = opt;
+    	    el.value = arrHPRating[i];
+    	    cbo.appendChild(el);
+    	}
+    	
+	}
+	
+	
+	function cboMLChanged(index) {
+		var obj=document.getElementById("VA" + index);		
+		if (obj.checked==true) {
+			setMLVARating("cboMLVA" + index, "VA");	
+		} else {
+			setMLVARating("cboMLVA" + index, "HP");
+		}						
+	}
+	
+	function cboHPChanged(index) {
+		var thisIndex=document.getElementById("cboHP" + index).selectedIndex-1;
+		var volt = document.getElementById("serviceVoltage").value;
+		var arr=[];
+		if (volt==230) {
+			arr=arrVARating230V;			
+		} else if(volt==208){
+			arr=arrVARating208V;
+		} else if(volt==200) {
+			arr=arrVARating200V;
+		} else {
+			//volt=115
+			arr=arrVARating115V;
+		}
+		var thisVA=arr[thisIndex];
+		var cbo = document.getElementById("cboMLVA" + index);
+		cbo.innerHTML="";						
+		var el = document.createElement("option");
+	    el.textContent = thisVA;
+	    el.value = thisVA;
+	    cbo.appendChild(el);
+	}
+	
+	function addML() {		
+        var cols = "";        
+        rowsML = rowsML+1;        
+        cols += '<tr id="rowML' + rowsML + '">';
+        cols += '<td width="5%">&nbsp;</td>';	        
+        cols += '<td width="20%"><select id="cboML' + rowsML + '" onchange="cboMLChanged(' + rowsML + ')" style="width:100%; text-align-last:right;" ></select></td>';		
+       	cols += '<td width="15%" align="center"><div name="selectMLrating' + rowsML + '" id="selectMLrating' + rowsML + '"><input type="radio" id="VA' + rowsML + '" name="selectMLrating' + rowsML + '" onclick = "MLratingTypeChanged(this)" value="VA" checked> VA &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" id="HP' + rowsML + '" name="selectMLrating' + rowsML + '" onclick = "MLratingTypeChanged(this)" value="HP"> HP </div></td>';
+       	cols += '<td width="10%" align="center"><select id="cboHP' + rowsML + '" onchange="cboHPChanged(' + rowsML + ')" style="width:100%; text-align-last:right;" disabled></select></td>';
+       	cols += '<td width="25%"><input type="text" id="MLQty' + rowsML + '" style="width:100%;text-align:center;" value="0"></td>';
+       	cols += '<td width="20%"><select id="cboMLVA' + rowsML + '" style="width:100%; text-align-last:center;" ><option selected value="0">0</option></select></td>';       	
+       	cols += '<td width="5%">&nbsp;<button class="buttonDelete" id="' + rowsML + '" onclick="deleteML(this)">-</button></td>';
+       	cols += '</tr>';  
+       	var tr=document.getElementById("tblML").insertRow(-1).innerHTML = cols;
+       	populateMLcbo("cboML"+rowsML);
+       	populateHPcbo("cboHP"+rowsML);
+	}
+	
+	function deleteML(obj){		
+		var index = obj.closest("tr").rowIndex;
+		document.getElementById("tblML").deleteRow(index);    	   
+	}
+	
+	function MLratingTypeChanged(obj) {
+		var index = obj.closest("tr").rowIndex;
+		var str=obj.id;		
+		var thisID=str.substring(2,str.length);		
+		var cbo=document.getElementById("cboHP" + thisID);
+		if (obj.value=="HP") {
+			cbo.disabled=false;
+			setMLVARating("cboMLVA" + thisID, "HP");
+			populateHPcbo("cboHP"+thisID	)
+		} else {
+			cbo.disabled=true;			
+			setMLVARating("cboMLVA" + thisID, "VA");
+		}
+		
+
+	}
+	
+	function setMLVARating(cboName, ratingType) {
+		var volt = document.getElementById("serviceVoltage").value;
+		var arr=[];
+		var cbo = document.getElementById(cboName);
+		cbo.innerHTML="";
+		if (ratingType=="VA") {
+			if (volt==230) {
+				arr=arrVARating230V;			
+			}
+			else if(volt==208){
+				arr=arrVARating208V;
+			}
+			else if(volt==200) {
+				arr=arrVARating200V;
+			}
+			else {
+				//volt=115
+				arr=arrVARating115V;
+			}										
+			for(var i = 0; i < arr.length; i++) {
+	    	    var opt = arr[i];
+	    	    var el = document.createElement("option");
+	    	    el.textContent = opt;
+	    	    el.value = opt;
+	    	    cbo.appendChild(el);
+	    	}
+		} else {
+			var el = document.createElement("option");
+    	    el.textContent = "0";
+    	    el.value = "0";
+    	    cbo.appendChild(el);
+    	    
+    		var str=cbo.id;		    		
+    		var thisID=str.substring(7,str.length);		    		
+    	    
+    	    populateHPcbo("cboHP" + thisID);
+		}
+		
+	}
+
+</script>
+
+</body>
+</html>
