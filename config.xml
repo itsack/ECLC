@@ -7,10 +7,10 @@
 
 <!-- versionCode is optional and Android only -->
 
-  <name>ECLC</name>
+  <name>RESC</name>
 
   <description>
-      An electric current load calculation app.
+      An  electrical current load calculation app for residential units.
   </description>
 
   <author href="https://shrichenterprises.com" email="ritsard_marzan@yahoo.com">
