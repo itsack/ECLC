@@ -29,7 +29,7 @@
 	var AWP=0;
 	var FA=0, GLCRL=0, TOT=0, NTL=0;
 	var SAL=0, TSAL=0, LL=0, TLL=0, BL=0, TBL=0;
-	
+	var useColC=0;
 	
 	//Array Counters
 	var ctrCookTop=-1, ctrCounterOven=-1, ctrFryer=-1, ctrElecRange=-1, ctrWallOven=-1;
@@ -49,6 +49,7 @@
 	var arrCAtableB=[];
 	var arrCAtableC=[];
 	var arrClothesDryer=[];
+	var arrVARatings=[];
 	var arrConductorTypes=["TW","UF","RHW","THHW","THW","THWN","XHHW","USE","ZW","TBS","SA","SIS","FEP","FEPB","MI","RHH","RHW-2","THHN","THW-2","THWN-2","USE-2","XHH","XHHW-2","ZW-2"];	
 	var arrAmperes=[1,3,6,10,15,20,25,30,35,40,45,50,60,70,80,90,100,110,125,150,175,200,225,250,300,350,400,450,500,600,601,700,800,1000,1200,1600,2000,2500,3000,4000,5000,6000];
 	var arrCopper60=[20,25,30,40,55,70,90,100,120,135,160,185,210,240,260,280,315,370,395,405,445];
@@ -158,9 +159,7 @@
 		addDebugText("INTB = " + INTB + "Amp");
 		addDebugText("ITB = " + ITB + "Amp");
 		
-		//NTD
-		NTD=getHigherAmpere(INTD);
-		addDebugText("Suggested Ampere = " + NTD + "Amp");
+		
 				
 		
 		//material and type
@@ -182,12 +181,33 @@
 		addDebugText("Wire Temperature is " + temperature);
 		
 		//RECCOMENDATIONS
-		RESCsuggest(mat, ty, temperature);		
+		
+		//INTD get higher Amps
+		INTD=getHigherAmpere(INTD);
+		addDebugText("Suggested INTD Ampere = " + INTD + "Amp");		
+		RESCsuggest(mat, ty, temperature,INTD, "INTD");		
+		
+		//IDETD get higher Amps
+		IDETD=getHigherAmpere(IDETD);
+		addDebugText("Suggested IDETD Ampere = " + IDETD + "Amp");		
+		RESCsuggest(mat, ty, temperature,IDETD, "IDETD");
+		
+		
+		//INTB get higher Amps
+		INTB=getHigherAmpere(INTB);
+		addDebugText("Suggested INTB Ampere = " + INTB + "Amp");		
+		RESCsuggest(mat, ty, temperature,INTB, "INTB");
+		
+		//ITB get higher Amps
+		ITB=getHigherAmpere(ITB);
+		addDebugText("Suggested ITB Ampere = " + ITB + "Amp");		
+		RESCsuggest(mat, ty, temperature,ITB, "ITB");
+		
 	}
 	
-	function RESCsuggest(material, matType, temp){
+	function RESCsuggest(material, matType, temp, ATval, ATtype){
 		var index=-1;
-		var AT = NTD;		
+		var AT = ATval;		
 		var arrNo=0;
 		var arr=[];
 		
@@ -233,14 +253,29 @@
 			}
 		}
 		
-		index=getIndexFromWireArray(arrNo);
+		index=getIndexFromWireArray(arrNo,ATval);
 		addDebugText("Wire index to use = " + index);
 		if(index>-1){			
 			var rec1="Use 1 - " + AT + " AT, 2 Pole, 250 V";
-			var rec2="Use 2 - " + arrConductorSize[index] + " mm squared " + matType + " " + material + " Wire (" + arr[index] + " A Ampacity)";
-			document.getElementById("NDF1").innerHTML=rec1;
-			document.getElementById("NDF2").innerHTML=rec2;
-			addDebugText("NTDF Reccommendation: ");
+			var rec2="Use 2 - " + arrConductorSize[index] + " mm <sup>2</sup> " + matType + " " + material + " Wire (" + arr[index] + " A Ampacity)";
+			if(ATtype=="INTD"){
+				document.getElementById("NDF1").innerHTML=rec1;
+				document.getElementById("NDF2").innerHTML=rec2;
+				addDebugText("INTD Reccommendation: ");				
+			} else if(ATtype=="IDETD") {
+				document.getElementById("TDF1").innerHTML=rec1;
+				document.getElementById("TDF2").innerHTML=rec2;
+				addDebugText("IDETD Reccommendation: ");			
+			} else if(ATtype=="INTB") {
+				document.getElementById("INTB1").innerHTML=rec1;
+				document.getElementById("INTB2").innerHTML=rec2;
+				addDebugText("INTB Reccommendation: ");			
+			}  else if(ATtype=="ITB") {
+				document.getElementById("ITB1").innerHTML=rec1;
+				document.getElementById("ITB2").innerHTML=rec2;
+				addDebugText("ITB Reccommendation: ");			
+			} 
+			
 			addDebugText(rec1);
 			addDebugText(rec2);
 		} else {
@@ -251,9 +286,9 @@
 	
 
 	
-	function getIndexFromWireArray(arrNo){
+	function getIndexFromWireArray(arrNo, ATval){
 		var arr=[];
-		var AT=NTD;
+		var AT=ATval;
 		
 		switch(arrNo) {
 		
@@ -321,7 +356,9 @@
 	
 	
 	function calculateLoad() {
-
+		useColC=0;
+		arrVARatings=[];
+		
 		//reset counters
 		ctrCookTop=-1;
 		ctrCounterOven=-1;
@@ -332,6 +369,16 @@
 		colAVA=0;
 		colBQty=0;
 		colBVA=0;
+		note1VA=0;
+		note2VA=0;
+		note3VA=0;
+		note4VA=0;
+		note5VA=0;
+		note1Qty=0;
+		note2Qty=0;
+		note3Qty=0;
+		note4Qty=0;
+		note5Qty=0;		
 		addDebugText("DEBUG DETAILS:");
 		addDebugText(Date());
 		for (var x=0; x<5; x++) {
@@ -361,16 +408,21 @@
 		addDebugText("NET Total Load: " + TOT + "VA");
 
 		//APPLICATION OF DEMAND FACTORS
-		if (TOT>=3000) {
-			var first=3000*1;
-			var rem=(TOT-3000)*0.35;
-			NTL=first+rem;			
+		if(FA>150){
+			NTL=0;
 		} else {
-			var first=3000*1;
-			var rem=(120000-3000)*0.35;
-			var rem1=(TOT-120000)*0.25;
-			NTL=first+rem+rem1;
+			if (TOT>=3000) {
+				var first=3000*1;
+				var rem=(TOT-3000)*0.35;
+				NTL=first+rem;			
+			} else {
+				var first=3000*1;
+				var rem=(120000-3000)*0.35;
+				var rem1=(TOT-120000)*0.25;
+				NTL=first+rem+rem1;
+			}
 		}
+		
 		
 		addDebugText("Demand Factor NTL = " + NTL + "VA");
 		NTL=Math.round(NTL);
@@ -381,7 +433,36 @@
 		
 		//COOKING APPLIANCES
 		//iterate on all values of table and compute totalMicroOven at the same time	
-		totalMicroOven=computeTotalMicroOven();		
+		totalMicroOven=computeTotalMicroOven();	
+		
+		//alert("VA Array length is =" + arrVARatings.length);
+		
+		//check if there is unequal rating
+		if (arrVARatings.length==0){
+			//no electric range
+			note1VA=0;
+			note1Qty=0;
+			note2VA=0;
+			note2Qty=0;
+		} else if (arrVARatings.length==1) {
+			//equal rating
+			if(arrVARatings[0]>8750 && arrVARatings[0]<12000){
+				//column c				
+				processEqualRatingERColC();
+				useColC=1;
+			} else {
+				processEqualRatingERNote1();
+				useColC=0;
+			}
+			
+		} else {
+			//unequal rating
+			alert("will process unequal rating");
+			processUnequalRatingER();
+		}
+		
+		
+		
 		addDebugText("Total Ordinary Microwave Oven Load = " + totalMicroOven + "VA");
 		addDebugText("Note 1 VA = " + note1VA + "VA");
 		addDebugText("Note 1 Qty = " + note1Qty + " unit(s)");
@@ -416,7 +497,15 @@
 		addDebugText("Highest Motor Load = " + HML + "VA");
 		
 		//TOTAL NET COMPUTED LOAD
-		TNCL=NTL + totalFA + totalCD + totalML + totalHL + TCL + totalMicroOven;
+		if(FA>150){
+			
+			var others=0;
+			others=(TLL+TSAL+TBL+totalML+totalMicroOven+totalFA+totalCD)*0.40;
+			TNCL=totalHL+GLCRL+TCL + others;
+		} else {
+			TNCL=NTL + totalFA + totalCD + totalML + totalHL + TCL + totalMicroOven;
+		}
+		
 		addDebugText("TOTAL NET COMPUTED LOAD = " + TNCL + "VA");
 		TNCL=Math.round(TNCL);
 		addDebugText("Rounded to -> " + TNCL + "VA");
@@ -428,6 +517,86 @@
 		IFLC=Math.round(IFLC);
 		addDebugText("Rounded to -> " + IFLC + "Amp");		
 	}
+	
+	function processEqualRatingERNote1() {
+		var table = document.getElementById("tblCA");
+		var selectObjs = table.getElementsByTagName("select");
+		var str="";
+		var thisID="";
+		var index="";
+		var thisQty=0, thisVA=0;
+		var tempQty=0;
+		var tempVA=arrVARatings[0];		
+		
+		for (var i=0; i<selectObjs.length;i++) {			
+			str=selectObjs[i].id;
+			thisID=str.substring(0,5);
+			index=str.substring(5,str.length);					
+			thisQty=parseInt(document.getElementById("CAQty"+index).value);
+			
+			if (selectObjs[i].value == "Electric Range") {
+				tempQty+=thisQty;
+			}			
+		}
+		note1Qty=tempQty;
+		note1VA=tempVA;
+	}
+	function processEqualRatingERColC() {
+		var table = document.getElementById("tblCA");
+		var selectObjs = table.getElementsByTagName("select");
+		var str="";
+		var thisID="";
+		var index="";
+		var thisQty=0, thisVA=0;
+		var tempQty=0;
+		var tempVA=arrVARatings[0];		
+		
+		for (var i=0; i<selectObjs.length;i++) {			
+			str=selectObjs[i].id;
+			thisID=str.substring(0,5);
+			index=str.substring(5,str.length);
+			alert("will get qty");
+			thisQty=parseInt(document.getElementById("CAQty"+index).value);
+			alert("thisQty="+thisQty);
+			if (selectObjs[i].value == "Electric Range") {
+				tempQty = tempQty + thisQty;
+			}			
+		}
+		note1Qty=tempQty;
+		note1VA=tempVA;
+		alert("Done with ColC");
+	}
+	
+	function processUnequalRatingER() {
+		var table = document.getElementById("tblCA");
+		var selectObjs = table.getElementsByTagName("select");
+		var str="";
+		var thisID="";
+		var index="";
+		var thisQty=0, thisVA=0;
+		var tempQty=0;
+		var tempVA=0;		
+		
+		for (var i=0; i<selectObjs.length;i++) {			
+			str=selectObjs[i].id;
+			thisID=str.substring(0,5);
+			index=str.substring(5,str.length);
+			
+			thisQty=parseInt(document.getElementById("CAQty"+index).value);
+			
+			thisVA=parseInt(document.getElementById("cboCAVA"+index).value);
+			//alert("here 539");
+			//alert("qty="+thisQty+": VA="+thisVA);
+			if (selectObjs[i].value == "Electric Range") {
+				tempQty = tempQty + thisQty;
+				tempVA = tempVA+(thisVA*thisQty);
+			}			
+		}
+		note2Qty=tempQty;
+		note2VA=tempVA;
+		alert("done unequal rating");
+	}
+	
 	
 	function computeTotalHL(){
 		var computedLoad=0;
@@ -512,27 +681,49 @@
 		//NOTE 1		
 			iQty=note1Qty;					
 			iVA=note1VA;	
-			avgVA=iVA/iQty;			
-			if(iQty>0 && iQty<26){
-				equivLoad=arrCAtableC[iQty]*1000;				
-				excessVA=(avgVA-12000)/1000;					
-				demandInc=excessVA*0.05;				
-				demandInc=demandInc*equivLoad;				
-				computedLoad=equivLoad+demandInc;				
-			}else if(iQty>25){
-				var extraLoad=0;
-				if (iQty<41){
-					extraLoad=1000;
+			avgVA=iVA/iQty;		
+			if (useColC==1) {
+				if(iQty>25){
+					
+					var extraLoad=0;
+					if (iQty<41){
+						extraLoad=1000;
+					} else {
+						extraLoad=750;
+					}				
+					equivLoad=arrCAtableC[iQty]*1000;				
+					equivLoad=equivLoad+(extraLoad*iQty);
+					//excessVA=(avgVA-12000)/1000;
+					//demandInc=excessVA*0.05;
+					//demandInc=demandInc*equivLoad;					
+					computedLoad=equivLoad;					
 				} else {
-					extraLoad=750;
+					computedLoad=arrCAtableC[iQty]*1000;
+				}	
+			} else {
+				//note1
+				if(iQty>0 && iQty<26){
+					equivLoad=arrCAtableC[iQty]*1000;				
+					excessVA=(note1VA-12000)/1000;					
+					demandInc=excessVA*0.05;				
+					demandInc=demandInc*equivLoad;				
+					computedLoad=equivLoad+demandInc;				
+				}else if(iQty>25){
+					var extraLoad=0;
+					if (iQty<41){
+						extraLoad=1000;
+					} else {
+						extraLoad=750;
+					}
+					equivLoad=arrCAtableC[iQty]*1000;				
+					equivLoad=equivLoad+(extraLoad*iQty);
+					excessVA=(note1VA-12000)/1000;
+					demandInc=excessVA*0.05;
+					demandInc=demandInc*equivLoad;
+					computedLoad=equivLoad+demandInc;				
 				}
-				equivLoad=arrCAtableC[iQty]*1000;				
-				equivLoad=equivLoad+(extraLoad*thisQty);
-				excessVA=(avgVA-12000)/1000;
-				demandInc=excessVA*0.05;
-				demandInc=demandInc*equivLoad;
-				computedLoad=equivLoad+demandInc;				
 			}
+			
 			tempNote[0]=computedLoad;
 		
 			computedLoad=0;
@@ -540,7 +731,9 @@
 			//NOTE 2			
 			iQty=note2Qty;			
 			iVA=note2VA;	
-			avgVA=iVA/iQty;			
+			avgVA=iVA/iQty;		
+			avgVA=Math.round((avgVA/1000));
+			avgVA=avgVA*1000;
 			if(iQty>0 && iQty<26){
 				equivLoad=arrCAtableC[iQty]*1000;					
 				excessVA=(avgVA-12000)/1000;				
@@ -577,6 +770,7 @@
 			
 			computedLoad=0;			
 			//NOTE 4
+			/*
 			iQty=note4Qty;					
 			iVA=note4VA;	
 			avgVA=iVA/iQty;			
@@ -601,8 +795,8 @@
 				computedLoad=equivLoad+demandInc;				
 			}
 			tempNote[3]=computedLoad;
-			
-			
+			*/
+			tempNote[3]=computedLoad;
 			//NOTE 5
 			computedLoad=note5VA;
 			tempNote[4]=computedLoad;
@@ -610,6 +804,25 @@
 		return tempNote;
 	}
 	
+	function appendToVAarray(VAval){
+		//check first if VA is already existing		
+		var existing=0;
+		if (arrVARatings.length>0){
+			for (var i=0;i<arrVARatings.length;i++){
+				if(VAval==arrVARatings[i]){
+					//VA already existing
+					existing=1;
+					break;
+				}
+			}
+			if (existing==0){
+				//then append
+				arrVARatings[arrVARatings.length]=VAval;
+			}
+		} else {
+			arrVARatings[0]=VAval;			
+		}
+	}
 	
 	function computeTotalMicroOven(){
 		var table = document.getElementById("tblCA");
@@ -618,7 +831,8 @@
 		var thisID="";
 		var index="";
 		var thisQty=0, thisVA=0;
-		var tempVA=0;			
+		var tempVA=0;		
+		
 		for (var i=0; i<selectObjs.length;i++) {			
 			str=selectObjs[i].id;
 			thisID=str.substring(0,5);
@@ -629,18 +843,23 @@
 			if (selectObjs[i].value == "Ordinary Microwave Oven") {								
 				tempVA += thisVA * thisQty;				
 			} else {
-				if(thisVA>8750 && thisVA>12000) {
+				if(thisVA>8750 && thisVA<=27000) {
+					//append to VA array to check unequal ratings
+					appendToVAarray(thisVA);					
 					//NOTE 1
-					note1Qty+=thisQty;
-					note1VA+=thisQty*thisVA;
+					//note1Qty+=thisQty;
+					//note1VA+=thisQty*thisVA;
 				} else if(thisVA>8750 && thisVA<=12000) {
+					appendToVAarray(thisVA);
 					//NOTE 2
 					//round up na late nang nasabi at hindi na-discuss!
+					/*
 					if(thisVA>=8750 && thisVA<12000){
 						thisVA=12000;
 					}
 					note2Qty = note2Qty + thisQty;
 					note2VA = note2VA + (thisQty*thisVA);
+					*/
 				} else if(thisVA>=3500 && thisVA<=8750) {
 					//NOTE 3
 					note3Qty+=thisQty;
@@ -654,6 +873,7 @@
 					note4VA+=thisQty*thisVA;					
 					colAQty+=thisQty;
 					colAVA+=thisVA*thisQty;
+					
 				}  else if(thisVA<=1750 && thisVA>=1) {
 					//NOTE 5
 					note5Qty+=thisQty;
@@ -958,8 +1178,8 @@
 			thisID=str.substring(0,7);			
 			if (selectObjs[i].type == "text" && thisID == "cboHLVA") {
 				var index=str.substring(7,str.length);
-				var rType = document.getElementById("HLVA"+index).checked;
-				if (rType==true) {
+				//var rType = document.getElementById("HLVA"+index).checked;
+				if (document.getElementById("HLVA"+index).checked==true) {
 					//VA
 					document.getElementById("cboHLVA"+index).value=0;
 				} else {
@@ -1138,7 +1358,10 @@
 		} else if (selIndex!=4 && selIndex!=0 && (thisVA<0 || thisVA>8750 || thisVA=="" || thisVA.indexOf(' ') >= 0)) {
 			alert("Please enter a valid VA Rating for this Cooking Appliance.");
 			document.getElementById(cboName).value=0;
-		} 
+		} else if (thisVA>27000 && selIndex==4) {
+			alert("VA Rating for Electric Range can be up to 27K VA only.");
+			document.getElementById(cboName).value=0;
+		}
 		
 		
 	}
