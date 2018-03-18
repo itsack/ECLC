@@ -435,7 +435,7 @@
 		//iterate on all values of table and compute totalMicroOven at the same time	
 		totalMicroOven=computeTotalMicroOven();	
 		
-		//alert("VA Array length is =" + arrVARatings.length);
+		////alert"VA Array length is =" + arrVARatings.length);
 		
 		//check if there is unequal rating
 		if (arrVARatings.length==0){
@@ -457,7 +457,7 @@
 			
 		} else {
 			//unequal rating
-			alert("will process unequal rating");
+			//alert"will process unequal rating");
 			processUnequalRatingER();
 		}
 		
@@ -555,16 +555,16 @@
 			str=selectObjs[i].id;
 			thisID=str.substring(0,5);
 			index=str.substring(5,str.length);
-			alert("will get qty");
+			//alert"will get qty");
 			thisQty=parseInt(document.getElementById("CAQty"+index).value);
-			alert("thisQty="+thisQty);
+			//alert"thisQty="+thisQty);
 			if (selectObjs[i].value == "Electric Range") {
 				tempQty = tempQty + thisQty;
 			}			
 		}
 		note1Qty=tempQty;
 		note1VA=tempVA;
-		alert("Done with ColC");
+		//alert"Done with ColC");
 	}
 	
 	function processUnequalRatingER() {
@@ -585,8 +585,8 @@
 			thisQty=parseInt(document.getElementById("CAQty"+index).value);
 			
 			thisVA=parseInt(document.getElementById("cboCAVA"+index).value);
-			//alert("here 539");
-			//alert("qty="+thisQty+": VA="+thisVA);
+			////alert"here 539");
+			////alert"qty="+thisQty+": VA="+thisVA);
 			if (selectObjs[i].value == "Electric Range") {
 				tempQty = tempQty + thisQty;
 				tempVA = tempVA+(thisVA*thisQty);
@@ -594,7 +594,7 @@
 		}
 		note2Qty=tempQty;
 		note2VA=tempVA;
-		alert("done unequal rating");
+		//alert"done unequal rating");
 	}
 	
 	
@@ -1151,12 +1151,12 @@
 	
 	function validateFloorArea(val) {		
 		if (isNaN(val)){
-			alert("Invalid Value. Please enter a valid floor area in square meters.");
+			//alert"Invalid Value. Please enter a valid floor area in square meters.");
 			document.getElementById("floorArea").value=0;
 		}
 		
 		if (val<0 || val=="" || val.indexOf(' ') >= 0){
-			alert("Please enter a valid floor area in square meters.");
+			//alert"Please enter a valid floor area in square meters.");
 			document.getElementById("floorArea").value=0;
 		}
 		
@@ -1197,7 +1197,7 @@
 			thisID=str.substring(0,7);
 			if (selectObjs[i].type == "text" && thisID == "cboMLVA") {
 				var index=str.substring(7,str.length);
-				//alert(index);
+				////alertindex);
 				var rType = document.getElementById("VA"+index).checked;
 				if (rType==true) {
 					//VA					
@@ -1247,12 +1247,12 @@
 		var index=objName.substring(5,objName.length);
 		var thisQty=document.getElementById(objName).value;
 		if (isNaN(thisQty)){
-			alert("Invalid Value. Please enter a valid Quantity for this Fastened Appliance.");
+			//alert"Invalid Value. Please enter a valid Quantity for this Fastened Appliance.");
 			document.getElementById(objName).value=0;
 		}
 		
 		if (thisQty<0 || thisQty=="" || thisQty.indexOf(' ') >= 0){
-			alert("Please enter a valid Quantity for this Fastened  Appliance.");
+			//alert"Please enter a valid Quantity for this Fastened  Appliance.");
 			document.getElementById(objName).value=0;
 		}
 		
@@ -1262,12 +1262,12 @@
 		var index=objName.substring(7,objName.length);
 		var thisVA=document.getElementById(objName).value;
 		if (isNaN(thisVA)){
-			alert("Invalid Value. Please enter a valid VA Rating for this Fastened Appliance.");
+			//alert"Invalid Value. Please enter a valid VA Rating for this Fastened Appliance.");
 			document.getElementById(objName).value=0;
 		}
 		
 		if (thisVA<0 || thisVA=="" || thisVA.indexOf(' ') >= 0){
-			alert("Please enter a valid VA Rating for this Fastened  Appliance.");
+			//alert"Please enter a valid VA Rating for this Fastened  Appliance.");
 			document.getElementById(objName).value=0;
 		}
 		
@@ -1329,12 +1329,12 @@
 		var index=objName.substring(5,objName.length);
 		var thisQty=document.getElementById(objName).value;
 		if (isNaN(thisQty)){
-			alert("Invalid Value. Please enter a valid Quantity for this Cooking Appliance.");
+			//alert"Invalid Value. Please enter a valid Quantity for this Cooking Appliance.");
 			document.getElementById(objName).value=0;
 		}
 		
 		if (thisQty<0 || thisQty=="" || thisQty.indexOf(' ') >= 0){
-			alert("Please enter a valid Quantity for this Cooking Appliance.");
+			//alert"Please enter a valid Quantity for this Cooking Appliance.");
 			document.getElementById(objName).value=0;
 		}
 		
@@ -1346,20 +1346,20 @@
 		var selIndex = document.getElementById("cboCA"+index).selectedIndex;
 		
 		if (isNaN(thisVA)){
-			alert("Invalid Value. Please enter a valid VA Rating for this Cooking Appliance.");
+			//alert"Invalid Value. Please enter a valid VA Rating for this Cooking Appliance.");
 			document.getElementById(cboName).value=0;
 		}
 		if (selIndex==0) {
-			alert("Please select first a valid Cooking Appliance.");
+			//alert"Please select first a valid Cooking Appliance.");
 			document.getElementById(cboName).value=0;
 		} else if (selIndex==4 && thisVA<0) {
-			alert("Please enter a valid VA Rating for this Cooking Appliance.");
+			//alert"Please enter a valid VA Rating for this Cooking Appliance.");
 			document.getElementById(cboName).value=0;
 		} else if (selIndex!=4 && selIndex!=0 && (thisVA<0 || thisVA>8750 || thisVA=="" || thisVA.indexOf(' ') >= 0)) {
-			alert("Please enter a valid VA Rating for this Cooking Appliance.");
+			//alert"Please enter a valid VA Rating for this Cooking Appliance.");
 			document.getElementById(cboName).value=0;
 		} else if (thisVA>27000 && selIndex==4) {
-			alert("VA Rating for Electric Range can be up to 27K VA only.");
+			//alert"VA Rating for Electric Range can be up to 27K VA only.");
 			document.getElementById(cboName).value=0;
 		}
 		
@@ -1417,12 +1417,12 @@
 		var index=objName.substring(5,objName.length);
 		var thisQty=document.getElementById(objName).value;
 		if (isNaN(thisQty)){
-			alert("Invalid Value. Please enter a valid Quantity for this Clothes Dryer.");
+			//alert"Invalid Value. Please enter a valid Quantity for this Clothes Dryer.");
 			document.getElementById(objName).value=0;
 		}
 		
 		if (thisQty<0 || thisQty=="" || thisQty.indexOf(' ') >= 0){
-			alert("Please enter a valid Quantity for this Clothes Dryer.");
+			//alert"Please enter a valid Quantity for this Clothes Dryer.");
 			document.getElementById(objName).value=0;
 		}
 		
@@ -1432,12 +1432,12 @@
 		var index=objName.substring(7,objName.length);
 		var thisVA=document.getElementById(objName).value;
 		if (isNaN(thisVA)){
-			alert("Invalid Value. Please enter a valid VA Rating for this Clothes Dryer.");
+			//alert"Invalid Value. Please enter a valid VA Rating for this Clothes Dryer.");
 			document.getElementById(objName).value=0;
 		}
 		
 		if (thisVA<0 || thisVA=="" || thisVA.indexOf(' ') >= 0){
-			alert("Please enter a valid VA Rating for this Clothes Dryer.");
+			//alert"Please enter a valid VA Rating for this Clothes Dryer.");
 			document.getElementById(objName).value=0;
 		}
 		
@@ -1469,12 +1469,12 @@
 		var index=objName.substring(5,objName.length);
 		var thisQty=document.getElementById(objName).value;
 		if (isNaN(thisQty)){
-			alert("Invalid Value. Please enter a valid Quantity for this Heater or AC Unit.");
+			//alert"Invalid Value. Please enter a valid Quantity for this Heater or AC Unit.");
 			document.getElementById(objName).value=0;
 		}
 		
 		if (thisQty<0 || thisQty=="" || thisQty.indexOf(' ') >= 0){
-			alert("Please enter a valid Quantity for this Heater or AC Unit.");
+			//alert"Please enter a valid Quantity for this Heater or AC Unit.");
 			document.getElementById(objName).value=0;
 		}
 		
@@ -1484,12 +1484,12 @@
 		var index=objName.substring(7,objName.length);
 		var thisVA=document.getElementById(objName).value;
 		if (isNaN(thisVA)){
-			alert("Invalid Value. Please enter a valid VA Rating for this Heater or AC Unit.");
+			//alert"Invalid Value. Please enter a valid VA Rating for this Heater or AC Unit.");
 			document.getElementById(objName).value=0;
 		}
 		
 		if (thisVA<0 || thisVA=="" || thisVA.indexOf(' ') >= 0){
-			alert("Please enter a valid VA Rating for this Heater or AC Unit.");
+			//alert"Please enter a valid VA Rating for this Heater or AC Unit.");
 			document.getElementById(objName).value=0;
 		}
 		
@@ -1598,12 +1598,12 @@
 		var index=objName.substring(5,objName.length);
 		var thisQty=document.getElementById(objName).value;
 		if (isNaN(thisQty)){
-			alert("Invalid Value. Please enter a valid Quantity for this Motor Unit.");
+			//alert"Invalid Value. Please enter a valid Quantity for this Motor Unit.");
 			document.getElementById(objName).value=0;
 		}
 		
 		if (thisQty<0 || thisQty=="" || thisQty.indexOf(' ') >= 0){
-			alert("Please enter a valid Quantity for this Motor Unit.");
+			//alert"Please enter a valid Quantity for this Motor Unit.");
 			document.getElementById(objName).value=0;
 		}
 		
@@ -1613,12 +1613,12 @@
 		var index=objName.substring(7,objName.length);
 		var thisVA=document.getElementById(objName).value;
 		if (isNaN(thisVA)){
-			alert("Invalid Value. Please enter a valid VA Rating for this Motor Unit.");
+			//alert"Invalid Value. Please enter a valid VA Rating for this Motor Unit.");
 			document.getElementById(objName).value=0;
 		}
 		
 		if (thisVA<0 || thisVA=="" || thisVA.indexOf(' ') >= 0){
-			alert("Please enter a valid VA Rating for this Motor Unit.");
+			//alert"Please enter a valid VA Rating for this Motor Unit.");
 			document.getElementById(objName).value=0;
 		}
 		
@@ -1765,12 +1765,12 @@
 		var thisID=document.getElementById("safetyFactor").id;
 		var thisVal=document.getElementById("safetyFactor").value;
 		if (isNaN(thisVal)){
-			alert("Invalid Value. Please enter a valid Safety Factor.");
+			//alert"Invalid Value. Please enter a valid Safety Factor.");
 			document.getElementById(thisID).value=0;
 		}
 		
 		if (thisVal<0 || thisVal=="" || thisVal.indexOf(' ') >= 0){
-			alert("Please enter a valid Safety Factor.");
+			//alert"Please enter a valid Safety Factor.");
 			document.getElementById(thisID).value=0;
 		}
 	}
