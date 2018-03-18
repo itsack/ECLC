@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="shortcut icon" type="image/png" href="favicon.png"/>
+	<link rel="stylesheet" href="styles.css">
+</head>
+
+<body onload="myOnLoadFunction()">
+
+    <div id="floatdiv" style="  
+	    position:fixed;  
+	    width:100%;top:0px;right:0px;  
+	    padding:0px;background:#FFFFFF;  
+	    border:0px solid #2266AA;  
+	    z-index:100">  
+		<table id="tblHeading" style="width:100%; margin:0em auto; border:0; border-spacing:0;">	
+			<tr bgcolor="#4CAF50" >
+				<td><img src="favicon.png" height="68px" width="68px"></td>
+				<td><h2 style="margin-top:2px;margin-bottom:0px;">Residential Electrical <br>Service Calculator <color style="font-size:10px;">Ver. 1.0</color></h2></td>
+				<td style="align:right;vertical-align:top;">
+					<div class="dropdown" style="margin-top:14px;">
+						<img src="menubtn.png" alt="Menu" width="36" height="36">			  
+					  <div class="dropdown-content">			  
+					    <a href="main.html">Reset Form</a>
+					    <a href="#" id="btnAbout">About RESC</a>			    
+					  </div>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div> 
+    
+  
+
+
+<p style="margin-top:120px;"></p>
+
+
+
+
+
+<table id="tblLoads"  style="width:100%; margin:1em auto" border="0">	
+	<tr>
+		<td width="75%" align="right"><strong>SERVICE VOLTAGE:</strong> &nbsp;&nbsp;&nbsp;</td>
+		<td width="25%">
+			<div class="styled-select blue semi-square">
+			<select id="serviceVoltage" onchange="cboVoltageChanged(this.value)">
+				<option value="230" selected>230V</option>
+				<option value="208">208V</option>
+				<option value="200">200V</option>
+				<option value="115">115V</option>
+			</select>	
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td width="75%">General Ligthning and Convenience Receptacle Load</td>
+		<td width="25%">&nbsp;</td>
+	</tr>
+	
+	<tr>
+		<td width="75%" align="right">Total Floor Area (m<sup>2</sup>): &nbsp;&nbsp;&nbsp;</td>
+		<td width="25%"><input type="text" id="floorArea" style="width:100%;text-align:center;" value="0" onchange="validateFloorArea(this.value)"></td>
+	</tr>
+	
+	<tr>
+		<td width="75%">Small Appliance Load</td>
+		<td width="25%">&nbsp;</td>
+	</tr>
+	
+	<tr>
+		<td width="75%" align="right">Number of Branch Circuit: &nbsp;&nbsp;&nbsp;</td>
+		<td width="25%">	
+			<div class="styled-select slate">		
+			<select id="SAL">							
+			</select>	
+			</div>
+		</td>
+	</tr>
+	
+	<tr>
+		<td width="75%">Laundry Load</td>
+		<td width="25%">&nbsp;</td>
+	</tr>
+	
+	<tr>
+		<td width="75%" align="right">Number of Branch Circuit: &nbsp;&nbsp;&nbsp;</td>
+		<td width="25%">
+			<div class="styled-select slate">			
+			<select id="laundry">
+				<option selected value="1">1</option>				
+			</select>
+			</div>
+		</td>
+	</tr>
+	
+	<tr>
+		<td width="75%">Bathroom Load</td>
+		<td width="25%">&nbsp;</td>
+	</tr>
+	
+	<tr>
+		<td width="75%" align="right">Number of Branch Circuit: &nbsp;&nbsp;&nbsp;</td>
+		<td width="25%">	
+			<div class="styled-select slate">		
+			<select id="bathroom" >
+				<option selected value="1">1</option>				
+			</select>	
+			</div>
+		</td>
+	</tr>
+	
+	
+</table>
+
+<table id="tblFA" name="tblFA" style="width:100%; margin:1em auto" border="0">	
+	<tr id="rowFA00">
+		<td colspan=5>&nbsp; </td>		
+	</tr>
+	<tr id="rowFA01" bgcolor="#90EE90">
+		<td colspan=5 style="font-weight:bold;">FASTENED APPLIANCES: </td>		
+	</tr>	
+	<tr id="rowFA02">
+		<td width="5%">&nbsp;</td>
+		<td width="70%">&nbsp;</td>
+		<td width="10%" align="center">QTY</td>
+		<td width="10%" align="center">VA</td>
+		<td width="5%"><button class="buttonAdd" id="btnAddFA" onclick="addFA()">+</button></td>		
+	</tr>
+	<tr id="rowFA1">
+		<td width="5%">&nbsp;</td>
+		<td width="70%">
+			<select id="cboFA1" onchange="cboFAChanged(1)" style="width:100%; text-align-last:right;" ></select>
+		</td>
+		<td width="10%"><input type="text" id="FAQty1" style="width:100%;text-align:center;" value="0" onchange="validateFAQty(this.id)"></td>
+		<td width="10%"><input type="text" id="cboFAVA1" style="width:100%;text-align:center;" value="0" onchange="validateFAVA(this.id)"></td>		
+		<td width="5%"><button class="buttonDelete buttonDisabled" id="btnDeleteFA1" disabled>-</button></td>
+	</tr>		
+</table>
+
+<table id="tblCA"  style="width:100%; margin:1em auto" border="0">
+	<tr id="rowCA00">
+		<td colspan=5>&nbsp; </td>		
+	</tr>
+	<tr id="rowCA01" bgcolor="#90EE90">
+		<td colspan=5 style="font-weight:bold;">COOKING APPLIANCES: </td>		
+	</tr>	
+	<tr id="rowCA02">
+		<td width="5%">&nbsp;</td>
+		<td width="70%">&nbsp;</td>
+		<td width="10%" align="center">QTY</td>
+		<td width="10%" align="center">VA</td>
+		<td width="5%"><button class="buttonAdd" id="btnAddCA" onclick="addCA()">+</button></td>		
+	</tr>
+	<tr id="rowCA1">
+		<td width="5%">&nbsp;</td>
+		<td width="70%">
+			<select id="cboCA1" onchange="cboCAChanged(1)" style="width:100%; text-align-last:right;" ></select>
+		</td>
+		<td width="10%"><input type="text" id="CAQty1" style="width:100%;text-align:center;" value="0" onchange="validateCAQty(this.id)"></td>
+		<td width="10%"><input type="text" id="cboCAVA1" style="width:100%;text-align:center;" value="0" onchange="validateCAVA(this.id)"></td>		
+		<td width="5%"><button class="buttonDelete buttonDisabled" id="btnDeleteCA1" disabled>-</button></td>
+	</tr>
+</table>
+
+<table id="tblCD"  style="width:100%; margin:1em auto" border="0">
+	<tr id="rowCD00">
+		<td colspan=5>&nbsp; </td>		
+	</tr>
+	<tr id="rowCD01" bgcolor="#90EE90">
+		<td colspan=5 style="font-weight:bold;">CLOTHES DRYER: </td>		
+	</tr>	
+	<tr id="rowCD02">
+		<td width="5%">&nbsp;</td>
+		<td width="70%">&nbsp;</td>
+		<td width="10%" align="center">QTY</td>
+		<td width="10%" align="center">VA</td>
+		<td width="5%"><button class="buttonAdd" id="btnAddCD" onclick="addCD()">+</button></td>		
+	</tr>
+	<tr id="rowCD1">
+		<td width="5%">&nbsp;</td>	        
+        <td width="70%"><input type="text" id="CD1" style="width:100%;text-align:center;" value="Clothes Dryer 1"></td>		
+       	<td width="10%"><input type="text" id="CDQty1" style="width:100%;text-align:center;" value="0" onchange="validateCDQty(this.id)"></td>
+       	<td width="10%"><input type="text" id="cboCDVA1" style="width:100%;text-align:center;" value="0" onchange="validateCDVA(this.id)"></td>
+       	<td width="5%"><button class="buttonDelete buttonDisabled" id="btnDeleteCD1" disabled>-</button></td>
+	</tr>
+</table>
+
+<table id="tblHL"  style="width:100%; margin:1em auto" border="0">	
+	<tr id="rowHL00">
+		<td colspan=7>&nbsp; </td>		
+	</tr>
+	<tr id="rowHL01" bgcolor="#90EE90">
+		<td colspan=7 style="font-weight:bold;">HEATING LOAD OR AIR CONDITIONING LOAD: </td>		
+	</tr>	
+	<tr id="rowHL02">
+		<td width="0%">&nbsp;</td>
+		<td width="35%">&nbsp;</td>
+		<td width="25%">&nbsp;</td>
+		<td width="15%">&nbsp;</td>
+		<td width="10%" align="center">QTY</td>
+		<td width="10%" align="center">VA</td>
+		<td width="5%"><button class="buttonAdd" id="btnAddHL" onclick="addHL()">+</button></td>		
+	</tr>				
+	<tr id="rowHL1">
+		<td width="0%">&nbsp;</td>
+		<td width="35%" align="center"><div name="selectHLappliance1" id="selectHLappliance1"><input type="radio" id="heater1" name="selectHLappliance1" value="heater">Heater&nbsp;<input type="radio" id="acu1" name="selectHLappliance1" value="acu" checked>ACU</div></td>
+		<td width="25%" align="center"><div name="selectHLrating1" id="selectHLrating1"><input type="radio" id="HLVA1" name="selectHLrating1" onclick = "HLratingTypeChanged(this)" value="VA" checked>VA&nbsp;<input type="radio" id="HLHP1" name="selectHLrating1" onclick = "HLratingTypeChanged(this)" value="HP">HP</div></td>
+		<td width="15%" align="center"><select id="cboHLHP1" onchange="cboHLHPChanged(1)" style="width:100%; text-align-last:right;" disabled></select></td>
+		<td width="10%"><input type="text" id="HLQty1" style="width:100%;text-align:center;" value="0" onchange="validateHLQty(this.id)"></td>
+		<td width="10%"><input type="text" id="cboHLVA1" style="width:100%;text-align:center;" value="0" onchange="validateHLVA(this.id)"></td>
+		<td width="5%"><button class="buttonDelete buttonDisabled" id="btnDeleteHL1" disabled>-</button></td>		
+	</tr>
+</table>
+
+<table id="tblML"  style="width:100%; margin:1em auto" border="0">	
+	<tr id="rowML00">
+		<td colspan=7>&nbsp; </td>		
+	</tr>
+	<tr id="rowML01" bgcolor="#90EE90">
+		<td colspan=7 style="font-weight:bold;">MOTOR LOAD: </td>		
+	</tr>	
+	<tr id="rowML02">
+		<td width="0%">&nbsp;</td>
+		<td width="35%">&nbsp;</td>
+		<td width="25%">&nbsp;</td>
+		<td width="15%">&nbsp;</td>
+		<td width="10%" align="center">QTY</td>
+		<td width="10%" align="center">VA</td>
+		<td width="5%"><button class="buttonAdd" id="btnAddML" onclick="addML()">+</button></td>		
+	</tr>	
+	<tr>
+		<td width="0%">&nbsp;</td>
+		<td width="35%"><select id="cboML1" onchange="cboMLChanged(1)" style="width:100%; text-align-last:right;" ></select></td>
+		<td width="25%" align="center"><div name="selectMLrating1" id="selectMLrating1"><input type="radio" id="VA1" name="selectMLrating1" onclick = "MLratingTypeChanged(this)" value="VA" checked>VA&nbsp;<input type="radio" id="HP1" name="selectMLrating1" onclick = "MLratingTypeChanged(this)" value="HP">HP</div></td>
+		<td width="15%" align="center"><select id="cboHP1" onchange="cboHPChanged(1)" style="width:100%; text-align-last:right;" disabled></select></td>
+		<td width="10%"><input type="text" id="MLQty1" style="width:100%;text-align:center;" value="0" onchange="validateMLQty(this.id)"></td>
+		<td width="10%"><input type="text" id="cboMLVA1" style="width:100%;text-align:center;" value="0" onchange="validateMLVA(this.id)"></td>	
+		<td width="5%"><button class="buttonDelete buttonDisabled" id="btnDeleteML1" disabled>-</button></td>	
+	</tr>	
+</table>
+<div id="debug" style="font-size:11px;">
+	
+</div>
+<p style="margin-bottom:60px;"></p>
+
+ <div id="floatdiv" style="  
+	    position:fixed;  
+	    width:100%;height:50px;bottom:0px;right:0px;  
+	    padding:0px;background:#4CAF50;  
+	    border:0px solid #2266AA;  
+	    z-index:100">  
+		<p align="center">
+		<button id="myBtn" class="buttonCalculate"><b>CALCULATE LOAD</b></button>
+		</p>		
+</div>
+
+
+<!-- The Modals -->
+<div id="myModal" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="close">&times;</span>
+      <div style="font-size:22px; font-weight:bold;"><img src="favicon.png" height="42px" width="42px">Load Calculation Results</div>
+    </div>
+    <div class="modal-body">
+      <br>
+      <p style="text-align:center;">Your Total Net Computed Load is<br><strong><label id="lblPhaseLoad"></label>&nbsp;VA</strong></p>
+      <br>	  	
+	  <hr>
+	  <p><i>Would you like to consider a safety factor for your recommendation?</i>
+	  	<div name="selectReccommendation" id="selectReccommendation">
+	  		&nbsp;&nbsp;&nbsp;<input type="radio" id="yesReccommend" name="selectReccommendation" onclick = "reccommendationChanged('YES')" value="YES" checked>YES
+	  		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>Enter a Safety Factor : </i><input type="text" id="safetyFactor" style="width:50px;text-align:center;" value=95 onchange="validateSafetyFactor()"> %
+	  		<br>&nbsp;&nbsp;&nbsp;<input type="radio" id="noReccommend" name="selectReccommendation" onclick = "reccommendationChanged('NO')" value="NO">NO
+			</div>	 
+			<br>
+			&nbsp;&nbsp;&nbsp;<i>Select Conductor Material and Type : </i>
+	  		<div name="selectMaterial" id="selectMaterial">
+	  		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" id="copper" name="selectMaterial" value="CU" checked>Cu - Copper<br>
+	  		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" id="aluminum" name="selectMaterial" value="AL">Al - Aluminum
+	  		<br>
+	  		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select id="cboConductorType" width="150px" onchange="validateConductorType()"></select>
+	  		&nbsp;&nbsp;Temperature:<select id="cboTemperature" disabled>	  			
+	  			<option value=75>75&#8451;</option>
+	  			<option value=90>90&#8451;</option>
+	  		</select>
+	  		</div> 	
+	  </p>
+	  <br>	  
+    </div>
+    <div class="modal-footer">
+      <p align="center">
+		<button id="btnReccommend" class="buttonCalculate"><b>Show Reccommendation</b></button>
+		</p>
+    </div>
+  </div>
+
+</div>
+
+<div id="reccommendationModal" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="close3">&times;</span>
+      <div style="font-size:22px; font-weight:bold;"><img src="favicon.png" height="42px" width="42px">Reccommendations</div>
+    </div>
+    <div class="modal-body" style="font-size:15px;">
+      <br>
+      <p>Total Net Computed Load : <strong><label id="lblPhaseLoad2"></label>&nbsp;VA</strong></p>
+      <hr>  		  	  
+      MAIN PROTECTIVE DEVICE AND FEEDER SIZE:
+      <br>	  
+      <br>
+	  NONTIME DELAY FUSE:<br>
+	  <label id="NDF1">&nbsp;</label><br>
+	  <label id="NDF2">&nbsp;</label>
+	  <hr>
+	  DUAL ELEMENT (TIME DELAY) FUSE:<br>
+	  <label id="TDF1">&nbsp;</label><br>
+	  <label id="TDF2">&nbsp;</label>
+	  <hr>
+	  INVERSE TIME BREAKER:<br>
+	  <label id="ITB1">&nbsp;</label><br>
+	  <label id="ITB2">&nbsp;</label>
+	  
+    </div>
+    <div class="modal-footer">
+      <p style="text-align:center;font-size:13px;">Thank you for using RESC!</p>
+    </div>
+  </div>
+
+</div>
+
+<div id="aboutModal" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="close2">&times;</span>
+      <div style="font-size:22px; font-weight:bold;"><img src="favicon.png" height="42px" width="42px">About RESC</div>
+    </div>
+    <div class="modal-body">      
+      <p>RESC or Residential Electrical Service Calculator is a mobile app for computing electrical load for residential units.</p>
+      <p>This app aims to compute the total current load of all electrical appliances and reccommends the size and type of wire, fuse, and trip protection to use. </p>       
+	  <hr>
+	  <p><i>Developed by:</i></p>
+	  <p><center>Name 1<br>Name 2<br>Name 3<br>Name 4<br><br></center></p>	 	 
+    </div>
+    <div class="modal-footer">
+      <p><center>&reg;&nbsp;All Rights Reserved 2018.</center>
+	  </p>
+    </div>
+  </div>
+
+</div>
+
+<script src="mainRESC.js"></script>
+ 
+</body>
+</html>
